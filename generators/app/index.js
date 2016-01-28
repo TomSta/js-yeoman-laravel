@@ -9,7 +9,7 @@
     },
 
     writing: function(){
-      this.copy('database/factories/ModelFactory.php', 'database/factories/ModelFactory.php');
+      
     }
   });
 

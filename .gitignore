@@ -1,3 +1,8 @@
 node_modules
 *~
 *.swp
+.vscode
+log
+tsd*
+typings*
+tmp_data*

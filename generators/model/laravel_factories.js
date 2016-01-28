@@ -1,19 +1,84 @@
 
 var exports = module.exports = {},
+     _ = require('lodash'),
      wiring = require('html-wiring');
      locs = require('./laravel-locations');
-     var modelProperties = [];
+
+
 
  var generators = require('yeoman-generator');
 
- exports.Base = generators.Base.extend({
+function migration(){
+      this.prepare = function(){
+        this.prepareMigration();
+      }
+}
 
-    _prepareFactory: function() {
-      var current = wiring.readFileAsString(locs.db.modelFactory),
+var laraObjects = {
+    migration: migration
+}
+
+ exports.Base = generators.Base.extend({
+  
+
+   
+   factory: function (context) {
+
+      function prepare(){
+        context.prepareFactory();
+      }
+
+     return { prepare: prepare }
+   },
+   add: function (what) {
+      var func = this[what](this);
+      this.log(func);
+      func.prepare(); 
+   },
+   
+   addFactory: function() { this.prepareFactory(); },
+   addMigration: function () { this.prepareMigration(); }, 
+
+    prepareMigration: function() {
+      var migration = this.fs.copyTpl(
+          this.templatePath(locs.db.modelMigration),
+          this.destinationPath(locs.db.modelMigrationDir
+            + "create_"
+            + this.name.toLowerCase()
+            + "s_table.php"
+              ),
+          {
+            'name': this.name.toLowerCase(),
+            'fields': this.buildMigrationInsert()
+          });
+          
+    },
+
+    prepareFactory: function() {
+      var current = wiring.readFileAsString(
+                        this.destinationPath(locs.db.modelFactory)
+                      ),
           factoryInsert = this.buildFactoryInsert(),
           newFactory = current + "\n" + factoryInsert;
 
-          this.log(newFactory);
+          wiring.writeFileFromString(
+                newFactory,
+                this.destinationPath(locs.db.modelFactory)
+                );
+
+    },
+
+    buildMigrationInsert: function()
+    {
+          var fields = [],
+              i = 0;
+          
+          for(i; i < this.modelProperties.length; i++){
+            fields.push(this.formatMigrationField(this.modelProperties[i]));
+          }
+
+          return fields.join("\n");
+      
     },
 
     buildFactoryInsert: function()
@@ -23,8 +88,8 @@ var exports = module.exports = {},
           i = 0,
           fields = [];
           
-          for(i; i < modelProperties.length; i++){
-            fields.push(this.formatFactoryField(modelProperties[i]));
+          for(i; i < this.modelProperties.length; i++){
+            fields.push(this.formatFactoryField(this.modelProperties[i]));
           }
 
           return newFactory
@@ -34,14 +99,35 @@ var exports = module.exports = {},
 
     formatFactoryField: function(modelField)
     {
-      var fName = modelField[0],
-          fType = modelField[1],
-          combined = '\t"'+ fName +'" => ' 
-                      + this.getFaker(fType);
-
-          return combined;                
+          return '\t"'+ modelField[0] +'" => ' 
+                      + this.getFaker(modelField[1]);
     },
 
+    formatMigrationField: function(modelField)
+    {
+          return '\t'+ this.getMigration(modelField[1])
+                     + "');"
+    },
+
+    getMigration: function (fieldType)
+    {
+      switch (fieldType) {
+          case 'string':
+            return "$table->string('";
+          case 'double':  
+            return "$table->double('";
+          case 'integer':
+            return "$table->integer('";
+          case 'datetime':
+            return "$table->datetime('";
+          case 'text':
+            return "$table->text('";
+          default:
+            return "$table->string('";
+      }
+    },
+
+      
     getFaker: function(fieldType){
        switch(fieldType){
           case 'string':
@@ -61,19 +147,43 @@ var exports = module.exports = {},
     _propertiesPrompt: function (as){
         var done = as || this.async();
 
-        this.prompt({
+        this.prompt([{
                 type: 'input',
                 name: 'var_name',
-                message: 'Wanna add model field?'
-              }
-, function (answers) {
-               if(answers.var_name.length > 0){
-                  this._typesPrompt(done, answers);
-                }
-                else {
-                  this.log('not pushing');
-                  done();
-                }
+                message: 'Variable name'
+              },{
+                type: 'rawlist',
+                name: 'var_type',
+                message: 'Variable type',
+                choices: [
+                  "string",
+                  "integer",
+                  "datetime",
+                  "text",
+                  "time",
+                  "blob",
+                  "double"
+                ]},
+                {
+                    type: "confirm",
+                    name: "askAgain",
+                    message: "Want to enter another one? (just hit enter for YES)?",
+                    default: true
+                }               
+                ], 
+                function (answers) {
+                    this.modelProperties.push([
+                        answers.var_name,
+                        answers.var_type
+                    ]);                    
+                    if ( answers.askAgain ) {
+                        this._propertiesPrompt();
+                    }
+                    else {
+                        this.log('not pushing');
+                        this.log(this.modelProperties)
+                        done();
+                    }
               }.bind(this));
     },
 
@@ -95,10 +205,7 @@ var exports = module.exports = {},
                 ]
               }], function (answers) {
                 this.log('chosen');
-                modelProperties.push([
-                    modelFields.var_name,
-                    answers.var_type
-                    ]);
+                
                 this._propertiesPrompt(promise);
               }.bind(this));
 

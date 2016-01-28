@@ -6,7 +6,11 @@ exports.db = {
     modelFactory: 
         "database/factories/ModelFactory.php",
     modelFactoryInsert: 
-        "database/factories/ModelFactory_insert.php"
+        "database/factories/ModelFactory_insert.php",
+    modelMigration: 
+        "database/migrations/migration.php",
+    modelMigrationDir: 
+        "database/migrations/"        
 }
 
 
