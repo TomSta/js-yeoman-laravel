@@ -20,7 +20,13 @@ var laraObjects = {
 
  exports.Base = generators.Base.extend({
   
+   constructor: function() {
 
+      generators.Base.apply(this,arguments);
+      this.argument('name', { type: String, required: true });
+      this.option('fields', {desc: 'fields for model'});
+      this.modelProperties = [];
+   },
    
    factory: function (context) {
 
@@ -147,44 +153,15 @@ var laraObjects = {
     _propertiesPrompt: function (as){
         var done = as || this.async();
 
-        this.prompt([{
+        this.prompt({
                 type: 'input',
                 name: 'var_name',
                 message: 'Variable name'
-              },{
-                type: 'rawlist',
-                name: 'var_type',
-                message: 'Variable type',
-                choices: [
-                  "string",
-                  "integer",
-                  "datetime",
-                  "text",
-                  "time",
-                  "blob",
-                  "double"
-                ]},
-                {
-                    type: "confirm",
-                    name: "askAgain",
-                    message: "Want to enter another one? (just hit enter for YES)?",
-                    default: true
-                }               
-                ], 
-                function (answers) {
-                    this.modelProperties.push([
-                        answers.var_name,
-                        answers.var_type
-                    ]);                    
-                    if ( answers.askAgain ) {
-                        this._propertiesPrompt();
-                    }
-                    else {
-                        this.log('not pushing');
-                        this.log(this.modelProperties)
-                        done();
-                    }
-              }.bind(this));
+              },  function (answers) {
+                    this.modelProperties = answers.var_name;   
+                    //console.log(this.modelProperties);                 
+                     done();
+                    }.bind(this));
     },
 
    _typesPrompt: function (promise, modelFields) {
