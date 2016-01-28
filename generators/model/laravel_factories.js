@@ -188,5 +188,49 @@ var laraObjects = {
 
 
    },
+                 _combine: function(vars, types){
+                var combined = [];
+                vars.forEach(function(element) {
+                    combined.push(
+                        { 
+                        name: element,
+                        type: types[element+"_type"]
+                        }      
+                    );
+                }, this);
+                
+                return combined;
+          },
+            modelQuestions: function() {
+              if(this.options.fields){
+                var i = 0,
+                    fields = this.options.fields.split(','),
+                    typeQuestions = [],
+                    typeAnswers = [],
+                    done= this.async();
+                    
+                    for(i = 0; i < fields.length; i++)
+                    {
+                        typeQuestions.push({
+                            type: 'rawlist',
+                            name: fields[i]+'_type',
+                            message: 'field type for '+fields[i],
+                            choices: [
+                                "string",
+                                "integer",
+                                "datetime",
+                                "text",
+                                "time",
+                                "blob",
+                                "double"
+                            ]});
+                    }
+                    
+                    this.prompt(typeQuestions, function (answers) {
+                        this.modelProperties = this._combine(fields, answers);
+                        done();
+                }.bind(this));      
+              }
+          }
   });
 

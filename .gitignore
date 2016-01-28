@@ -6,3 +6,4 @@ log
 tsd*
 typings*
 tmp_data*
+database
