@@ -14,7 +14,7 @@ class CreateUsersTable extends Migration
     {
         Schema::create('<%= name %>', function (Blueprint $table) {
             $table->increments('id');
-	    <%= fields %>
+	    <%- fields %>
         });
     }
 

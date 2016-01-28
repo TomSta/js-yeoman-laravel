@@ -33,11 +33,19 @@ describe('yaylar:model', function () {
             ]);
     });
        
-    it('should add factory in ModelFactories', function () {
-        // assert.fileContent(
-        //      'database/factories/ModelFactory.php',
-        //      '"someVar" => $faker->name');
+    it('adds factory in ModelFactories', function () {
+         assert.fileContent(
+              'database/factories/ModelFactory.php',
+              '"rambo" => $faker->name');
     }); 
+
+    it('adds migration fields in migrations', function () {
+         assert.fileContent(
+              'database/migrations/create_newmodels_table.php',
+              "$table->string('rambo');");
+    }); 
+
+
  
   });   
   

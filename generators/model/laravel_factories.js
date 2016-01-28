@@ -26,12 +26,14 @@ exports.Base = generators.Base.extend({
   }, 
 
   prepareMigration: function () {
+    var newContent = this.buildMigrationInsert();
+    console.log('new content', newContent) 
     var migration = this.fs.copyTpl(
       this.templatePath(locs.db.modelMigration),
       this.destinationPath(this.getMigrationFileName()),
       {
-        'name': this.name.toLowerCase(),
-        'fields': this.buildMigrationInsert()
+        name: this.name.toLowerCase(),
+        fields: this.buildMigrationInsert()
       });
   },
   
@@ -60,6 +62,8 @@ exports.Base = generators.Base.extend({
           fields.push(this.formatMigrationField(this.modelProperties[i]));
         }
 
+        console.log("from build migration insert", fields.join("\n"));
+        
         return fields.join("\n");
     
   },
@@ -82,14 +86,18 @@ exports.Base = generators.Base.extend({
 
   formatFactoryField: function(modelField)
   {
-        return '\t"'+ modelField[0] +'" => ' 
-                    + this.getFaker(modelField[1]);
+        return '\t"'+ modelField.name +'" => ' 
+                    + this.getFaker(modelField.type);
   },
 
   formatMigrationField: function(modelField)
   {
-        return '\t'+ this.getMigration(modelField[1])
+        console.log('from formatmigrationfield', modelField);
+        var created =  '\t'+ this.getMigration(modelField.type)
+                    + modelField.name
                     + "');"
+        console.log('from formatmigrationfield', created);
+        return created;
   },
 
   getMigration: function (fieldType)
