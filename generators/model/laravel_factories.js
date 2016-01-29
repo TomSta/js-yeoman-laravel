@@ -27,26 +27,43 @@ exports.Base = generators.Base.extend({
   }, 
 
   addModel: function () {
-    this.prepareModel();  
+    this.prepareTemplate(
+      locs.db.modelFile,
+      locs.db.modelDir+this.name+".php"
+    );  
   },
 
   
   addController: function () {
-    this.prepareController();  
+    this.prepareTemplate(
+      locs.db.controllerFile,
+      locs.db.controllerDir+this.name+"Controller.php"
+    );  
   },
   
   addRepository: function () {
     this.prepareRepositoryInterface();
-    this.prepareRepository();
+    this.prepareTemplate(
+      locs.db.repositoryFile,
+      locs.db.repositoryDir+this.name+"Repository.php"
+    );  
+    //this.prepareRepository();
   },
 
-  
-  prepareController: function () {
-    console.log(locs.db.controllerFile);
-    console.log(locs.db.controllerDir+this.name+"Controller.php");
+  prepareTemplate: function ( source, destination ) {
     this.fs.copyTpl(
-      this.templatePath(locs.db.controllerFile),
-      this.destinationPath(locs.db.controllerDir+this.name+"Controller.php"),
+      this.templatePath(source),
+      this.destinationPath(destination),
+      {
+        namespace: this.namespace,
+        model: this.name
+      });
+  },
+
+  prepareModel: function () {
+    this.fs.copyTpl(
+      this.templatePath(locs.db.modelFile),
+      this.destinationPath(locs.db.modelDir+this.name+".php"),
       {
         namespace: this.namespace,
         model: this.name
@@ -68,31 +85,9 @@ exports.Base = generators.Base.extend({
         model: this.name
       });
   },
-
-  prepareRepository: function () {
-    var migration = this.fs.copyTpl(
-      this.templatePath(locs.db.repositoryFile),
-      this.destinationPath(locs.db.repositoryDir+this.name+"Repository.php"),
-      {
-        namespace: this.namespace,
-        model: this.name
-      });
-  },
-
-  prepareModel: function () {
-    var newContent = this.buildMigrationInsert();
-    var migration = this.fs.copyTpl(
-      this.templatePath(locs.db.modelFile),
-      this.destinationPath(locs.db.modelDir+this.name+".php"),
-      {
-        namespace: this.namespace,
-        model: this.name
-      });
-  },
   
   prepareMigration: function () {
-    var newContent = this.buildMigrationInsert();
-    var migration = this.fs.copyTpl(
+    this.fs.copyTpl(
       this.templatePath(locs.db.modelMigration),
       this.destinationPath(this.getMigrationFileName()),
       {
@@ -100,6 +95,7 @@ exports.Base = generators.Base.extend({
         fields: this.buildMigrationInsert()
       });
   },
+
   getMigrationFileName: function () {
     return locs.db.modelMigrationDir + "create_" 
            + this.name.toLowerCase() + "s_table.php"
