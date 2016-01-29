@@ -8,7 +8,7 @@ var expect = chai.expect;
 var should = chai.should();
 
 describe('yaylar:model', function () {
- var helper, answers, args;
+ var helper, answers, modelName, appDir;
 
  describe('crud generator', function () {
     
@@ -26,7 +26,8 @@ describe('yaylar:model', function () {
         })
         .on('end', function(){
           answers = helper.answers;
-          args = helper.args;
+          modelName = helper.args[0];
+          appDir = 'app/';
           done();
         });
         
@@ -40,14 +41,14 @@ describe('yaylar:model', function () {
               ]);
       });
 
-      it('and fills up table structure', function () {
+      it('with filled up table', function () {
            assert.fileContent(
                 'database/migrations/create_newmodels_table.php',
                 "$table->string('rambo');");
       });
     });
     
-    describe('creates factory for models', function () {
+    describe('creates factory', function () {
       it('and adds factory in laravel\'s ModelFactor.php', function () {
            assert.fileContent(
                 'database/factories/ModelFactory.php',
@@ -63,11 +64,45 @@ describe('yaylar:model', function () {
       });
 
       it("with model from template", function () {
-        assert.file([
-          'app/'+args[0]+'.php'
-          ]);
+        var file = appDir+modelName+'.php'
+
+        assert.file([ file ]);
+        assert.fileContent( file, 'class '+modelName);
+          
       });
     
+    });
+
+    describe("creates repository", function () {
+      
+  
+      it("interface", function () {
+        var repoIFile = appDir+'Interfaces/'+modelName+"RepositoryInterface.php";
+        assert.file([ repoIFile ]); 
+      });
+
+      it("file implementing interface", function () {
+        var repoFile = appDir +'Repositories/'+modelName+"Repository.php";
+        assert.fileContent( repoFile, modelName+'Repository implements '+ modelName+'RepositoryInterface');
+      });
+
+    
+    });
+
+    describe.skip("creates controller", function () {
+
+      it('in the right place', function () {
+
+      });
+
+      it("with methods for crud", function () {
+      
+      });
+
+      it("that gets injected repository", function () {
+      
+      });
+
     });
     
  

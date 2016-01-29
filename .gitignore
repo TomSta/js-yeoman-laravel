@@ -7,4 +7,4 @@ tsd*
 typings*
 tmp_data*
 database
-app/
+*.swo

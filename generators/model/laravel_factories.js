@@ -29,6 +29,37 @@ exports.Base = generators.Base.extend({
   addModel: function () {
     this.prepareModel();  
   },
+  
+  addRepository: function () {
+    this.prepareRepositoryInterface();
+    this.prepareRepository();
+  },
+
+  prepareRepositoryInterface: function () {
+    var path = locs.db.interfacesDir
+                +this.name+"RepositoryInterface.php";
+                      
+    var migration = this.fs.copyTpl(
+      this.templatePath(locs.db.repositoryInterfaceFile),
+      this.destinationPath(
+                  locs.db.interfacesDir
+                  +this.name+"RepositoryInterface.php"
+                ),
+      {
+        namespace: this.namespace,
+        model: this.name
+      });
+  },
+
+  prepareRepository: function () {
+    var migration = this.fs.copyTpl(
+      this.templatePath(locs.db.repositoryFile),
+      this.destinationPath(locs.db.repositoryDir+this.name+"Repository.php"),
+      {
+        namespace: this.namespace,
+        model: this.name
+      });
+  },
 
   prepareModel: function () {
     var newContent = this.buildMigrationInsert();

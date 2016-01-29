@@ -18,6 +18,7 @@
      this.addFactory();
      this.addMigration();
      this.addModel();
+     this.addRepository();
     },
 
   });

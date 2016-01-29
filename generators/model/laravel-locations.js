@@ -14,7 +14,16 @@ exports.db = {
     modelFile:
         "app/model.php",
     modelDir:
-        "app/"
+        "app/",
+    repositoryDir:
+        "app/Repositories/",
+    repositoryFile:
+        "app/Repositories/Repository.php",
+    repositoryInterfaceFile:
+        "app/Interfaces/RepositoryInterface.php",
+    interfacesDir:
+        "app/Interfaces/",
+    
 }
 
 
