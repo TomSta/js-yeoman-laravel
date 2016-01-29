@@ -18,7 +18,13 @@
     "yeoman-generator": "^0.22.5"
   },
   "devDependencies": {
+    "chai": "^3.5.0",
     "fs-extra": "^0.26.5",
+    "grunt": "^0.4.5",
+    "grunt-contrib-watch": "^0.6.1",
+    "grunt-shell": "^1.1.2",
+    "grunt-tasks": "^1.0.0",
+    "load-grunt-tasks": "^3.4.0",
     "mocha": "^2.4.4",
     "yeoman-test": "^1.0.0"
   }

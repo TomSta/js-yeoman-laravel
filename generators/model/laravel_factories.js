@@ -15,6 +15,7 @@ exports.Base = generators.Base.extend({
     this.argument('name', { type: String, required: true });
     this.option('fields', {desc: 'fields for model'});
     this.modelProperties = [];
+    this.namespace = '';
   },
       
   addFactory: function () { 
@@ -25,9 +26,23 @@ exports.Base = generators.Base.extend({
     this.prepareMigration(); 
   }, 
 
+  addModel: function () {
+    this.prepareModel();  
+  },
+
+  prepareModel: function () {
+    var newContent = this.buildMigrationInsert();
+    var migration = this.fs.copyTpl(
+      this.templatePath(locs.db.modelFile),
+      this.destinationPath(locs.db.modelDir+this.name+".php"),
+      {
+        namespace: this.namespace,
+        model: this.name
+      });
+  },
+  
   prepareMigration: function () {
     var newContent = this.buildMigrationInsert();
-    console.log('new content', newContent) 
     var migration = this.fs.copyTpl(
       this.templatePath(locs.db.modelMigration),
       this.destinationPath(this.getMigrationFileName()),
@@ -36,7 +51,6 @@ exports.Base = generators.Base.extend({
         fields: this.buildMigrationInsert()
       });
   },
-  
   getMigrationFileName: function () {
     return locs.db.modelMigrationDir + "create_" 
            + this.name.toLowerCase() + "s_table.php"
@@ -61,8 +75,6 @@ exports.Base = generators.Base.extend({
         for(i; i < this.modelProperties.length; i++){
           fields.push(this.formatMigrationField(this.modelProperties[i]));
         }
-
-        console.log("from build migration insert", fields.join("\n"));
         
         return fields.join("\n");
     
@@ -92,11 +104,9 @@ exports.Base = generators.Base.extend({
 
   formatMigrationField: function(modelField)
   {
-        console.log('from formatmigrationfield', modelField);
         var created =  '\t'+ this.getMigration(modelField.type)
                     + modelField.name
                     + "');"
-        console.log('from formatmigrationfield', created);
         return created;
   },
 
@@ -148,13 +158,22 @@ exports.Base = generators.Base.extend({
         return combined;
   },
 
+
+
   modelQuestions: function() {
     if(this.options.fields){
       var i = 0,
           fields = this.options.fields.split(','),
-          typeQuestions = [],
+          typeQuestions = [{
+            type: 'input',
+            name: 'namespace',
+            message: 'set model namespace',
+            default: 'App\\'
+          }],
           typeAnswers = [],
           done= this.async();
+       
+
           
           for(i = 0; i < fields.length; i++)
           {
@@ -175,6 +194,7 @@ exports.Base = generators.Base.extend({
           
           this.prompt(typeQuestions, function (answers) {
               this.modelProperties = this._combine(fields, answers);
+              this.namespace = answers.namespace;
               done();
       }.bind(this));      
     }

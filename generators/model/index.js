@@ -15,9 +15,9 @@
 
 
     writing: function() {
-     this.log(this.modelProperties);   
      this.addFactory();
      this.addMigration();
+     this.addModel();
     },
 
   });

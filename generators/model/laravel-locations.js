@@ -10,7 +10,11 @@ exports.db = {
     modelMigration: 
         "database/migrations/migration.php",
     modelMigrationDir: 
-        "database/migrations/"        
+        "database/migrations/",
+    modelFile:
+        "app/model.php",
+    modelDir:
+        "app/"
 }
 
 
