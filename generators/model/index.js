@@ -19,6 +19,7 @@
      this.addMigration();
      this.addModel();
      this.addRepository();
+     this.addController();
     },
 
   });

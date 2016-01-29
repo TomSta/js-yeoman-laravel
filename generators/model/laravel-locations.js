@@ -23,6 +23,10 @@ exports.db = {
         "app/Interfaces/RepositoryInterface.php",
     interfacesDir:
         "app/Interfaces/",
+    controllerFile:
+        "app/Http/Controllers/Controller.php",
+    controllerDir:
+        "app/Http/Controllers/",
     
 }
 

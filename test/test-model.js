@@ -8,7 +8,7 @@ var expect = chai.expect;
 var should = chai.should();
 
 describe('yaylar:model', function () {
- var helper, answers, modelName, appDir;
+ var helper, answers, modelName, appDir, file;
 
  describe('crud generator', function () {
     
@@ -33,6 +33,10 @@ describe('yaylar:model', function () {
         
         
     });
+
+   beforeEach ( function () {
+     file = null;
+   } ); 
     
     describe('creates migration', function () {
       it('file', function () {    
@@ -64,7 +68,7 @@ describe('yaylar:model', function () {
       });
 
       it("with model from template", function () {
-        var file = appDir+modelName+'.php'
+        file = appDir+modelName+'.php'
 
         assert.file([ file ]);
         assert.fileContent( file, 'class '+modelName);
@@ -77,30 +81,38 @@ describe('yaylar:model', function () {
       
   
       it("interface", function () {
-        var repoIFile = appDir+'Interfaces/'+modelName+"RepositoryInterface.php";
-        assert.file([ repoIFile ]); 
+        file = appDir+'Interfaces/'+modelName+'RepositoryInterface.php';
+        assert.file([ file ]); 
       });
 
       it("file implementing interface", function () {
-        var repoFile = appDir +'Repositories/'+modelName+"Repository.php";
-        assert.fileContent( repoFile, modelName+'Repository implements '+ modelName+'RepositoryInterface');
+        var file = appDir +'Repositories/'+modelName+'Repository.php';
+        assert.fileContent( file, modelName+'Repository implements '+ modelName+'RepositoryInterface');
       });
 
     
     });
 
-    describe.skip("creates controller", function () {
+    describe("creates controller", function () {
 
+      beforeEach ( function () {
+        file = appDir + 'Http/Controllers/'+modelName+'Controller.php';
+      } );
+      
       it('in the right place', function () {
-
+        assert.file([ file ]); 
       });
 
       it("with methods for crud", function () {
-      
+        var methods = ['index', 'show', 'create', 'update'];
+        methods.forEach(function(element){
+          assert.fileContent( file, 'public function '+element );
+        });
+
       });
 
-      it("that gets injected repository", function () {
-      
+      it("that gets injected repository and request", function () {
+        assert.fileContent( file, '__construct('+modelName+'Repository $repo, Request $request' );
       });
 
     });

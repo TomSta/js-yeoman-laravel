@@ -29,10 +29,28 @@ exports.Base = generators.Base.extend({
   addModel: function () {
     this.prepareModel();  
   },
+
+  
+  addController: function () {
+    this.prepareController();  
+  },
   
   addRepository: function () {
     this.prepareRepositoryInterface();
     this.prepareRepository();
+  },
+
+  
+  prepareController: function () {
+    console.log(locs.db.controllerFile);
+    console.log(locs.db.controllerDir+this.name+"Controller.php");
+    this.fs.copyTpl(
+      this.templatePath(locs.db.controllerFile),
+      this.destinationPath(locs.db.controllerDir+this.name+"Controller.php"),
+      {
+        namespace: this.namespace,
+        model: this.name
+      });
   },
 
   prepareRepositoryInterface: function () {
