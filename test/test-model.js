@@ -8,7 +8,7 @@ var expect = chai.expect;
 var should = chai.should();
 
 describe('yaylar:model', function () {
- var helper;
+ var helper, answers, args;
 
  describe('crud generator', function () {
     
@@ -25,39 +25,46 @@ describe('yaylar:model', function () {
             tytul_type: 'integer'
         })
         .on('end', function(){
+          answers = helper.answers;
+          args = helper.args;
           done();
         });
         
         
     });
-       
-    it('create migration file with fields', function () {    
-        assert.file([
-            'database/migrations/create_newmodels_table.php'
-            ]);
-
-         assert.fileContent(
-              'database/migrations/create_newmodels_table.php',
-              "$table->string('rambo');");
-    });
-       
-    it('adds factory in ModelFactories', function () {
-         assert.fileContent(
-              'database/factories/ModelFactory.php',
-              '"rambo" => $faker->name');
-    }); 
-
-
-    describe("model creation", function () {
     
-      it("gets namespace from prompt", function () {
-        expect(helper.answers).to.include.keys('namespace');
-        expect(helper.answers.namespace).to.contain('App\\');
+    describe('creates migration', function () {
+      it('file', function () {    
+          assert.file([
+              'database/migrations/create_newmodels_table.php'
+              ]);
       });
 
-      it("adds model", function () {
+      it('and fills up table structure', function () {
+           assert.fileContent(
+                'database/migrations/create_newmodels_table.php',
+                "$table->string('rambo');");
+      });
+    });
+    
+    describe('creates factory for models', function () {
+      it('and adds factory in laravel\'s ModelFactor.php', function () {
+           assert.fileContent(
+                'database/factories/ModelFactory.php',
+                '"rambo" => $faker->name');
+      }); 
+    });
+
+    describe("creates model", function () {
+    
+      it("with namespace from prompt", function () {
+        expect(answers).to.include.keys('namespace');
+        expect(answers.namespace).to.contain('App\\');
+      });
+
+      it("with model from template", function () {
         assert.file([
-          'app/'+helper.args[0]+'.php'
+          'app/'+args[0]+'.php'
           ]);
       });
     
