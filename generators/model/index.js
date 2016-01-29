@@ -17,9 +17,9 @@
     writing: function() {
      this.addFactory();
      this.addMigration();
-     this.addModel();
+     this.addFromTemplate( 'model' );
+     this.addFromTemplate( 'controller' );
      this.addRepository();
-     this.addController();
     },
 
   });

@@ -5,7 +5,6 @@ var exports = module.exports = {},
      locs = require('./laravel-locations');
 
 
-
 var generators = require('yeoman-generator');
 
 exports.Base = generators.Base.extend({
@@ -16,6 +15,7 @@ exports.Base = generators.Base.extend({
     this.option('fields', {desc: 'fields for model'});
     this.modelProperties = [];
     this.namespace = '';
+    locs.caller = this;
   },
       
   addFactory: function () { 
@@ -24,71 +24,23 @@ exports.Base = generators.Base.extend({
   
   addMigration: function () { 
     this.prepareMigration(); 
-  }, 
-
-  addModel: function () {
-    this.prepareTemplate(
-      locs.db.modelFile,
-      locs.db.modelDir+this.name+".php"
-    );  
   },
 
-  
-  addController: function () {
-    this.prepareTemplate(
-      locs.db.controllerFile,
-      locs.db.controllerDir+this.name+"Controller.php"
-    );  
+  addFromTemplate: function ( what ) {
+    locs.copyTemplate( what );
   },
-  
+
   addRepository: function () {
-    this.prepareRepositoryInterface();
-    this.prepareTemplate(
-      locs.db.repositoryFile,
-      locs.db.repositoryDir+this.name+"Repository.php"
-    );  
-    //this.prepareRepository();
-  },
-
-  prepareTemplate: function ( source, destination ) {
-    this.fs.copyTpl(
-      this.templatePath(source),
-      this.destinationPath(destination),
-      {
-        namespace: this.namespace,
-        model: this.name
-      });
-  },
-
-  prepareModel: function () {
-    this.fs.copyTpl(
-      this.templatePath(locs.db.modelFile),
-      this.destinationPath(locs.db.modelDir+this.name+".php"),
-      {
-        namespace: this.namespace,
-        model: this.name
-      });
+    locs.copyTemplate( 'repository', this.prepareRepositoryInterface );
   },
 
   prepareRepositoryInterface: function () {
-    var path = locs.db.interfacesDir
-                +this.name+"RepositoryInterface.php";
-                      
-    var migration = this.fs.copyTpl(
-      this.templatePath(locs.db.repositoryInterfaceFile),
-      this.destinationPath(
-                  locs.db.interfacesDir
-                  +this.name+"RepositoryInterface.php"
-                ),
-      {
-        namespace: this.namespace,
-        model: this.name
-      });
+    locs.copyTemplate( 'repositoryInterface' );                  
   },
   
   prepareMigration: function () {
     this.fs.copyTpl(
-      this.templatePath(locs.db.modelMigration),
+      this.templatePath(locs.db().modelMigration),
       this.destinationPath(this.getMigrationFileName()),
       {
         name: this.name.toLowerCase(),
@@ -97,18 +49,18 @@ exports.Base = generators.Base.extend({
   },
 
   getMigrationFileName: function () {
-    return locs.db.modelMigrationDir + "create_" 
+    return locs.db().modelMigrationDir + "create_" 
            + this.name.toLowerCase() + "s_table.php"
   },
 
   prepareFactory: function() {
-    var current = wiring.readFileAsString(this.destinationPath(locs.db.modelFactory)),
+    var current = wiring.readFileAsString(this.destinationPath(locs.db().modelFactory)),
         factoryInsert = this.buildFactoryInsert(),
         newFactory = current + "\n" + factoryInsert;
 
         wiring.writeFileFromString(
               newFactory,
-              this.destinationPath(locs.db.modelFactory)
+              this.destinationPath(locs.db().modelFactory)
         );
   },
 
@@ -127,7 +79,7 @@ exports.Base = generators.Base.extend({
 
   buildFactoryInsert: function()
   {
-        var pathInsert = this.templatePath(locs.db.modelFactoryInsert),
+        var pathInsert = this.templatePath(locs.db().modelFactoryInsert),
         newFactory = wiring.readFileAsString(pathInsert),
         i = 0,
         fields = [];
@@ -203,8 +155,6 @@ exports.Base = generators.Base.extend({
         return combined;
   },
 
-
-
   modelQuestions: function() {
     if(this.options.fields){
       var i = 0,
@@ -217,8 +167,6 @@ exports.Base = generators.Base.extend({
           }],
           typeAnswers = [],
           done= this.async();
-       
-
           
           for(i = 0; i < fields.length; i++)
           {
