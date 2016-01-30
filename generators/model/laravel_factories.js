@@ -32,17 +32,85 @@ exports.Base = generators.Base.extend({
 
   prepareMigration: function () {
     this.fs.copyTpl(
-      this.templatePath(locs.db().modelMigration),
-      this.destinationPath(this.getMigrationFileName()),
+      this.templatePath(locs.db().migrationFile),
+      this.destinationPath(locs.db().migrationFileDestination),
       {
         name: this.name.toLowerCase(),
         fields: this.buildMigrationInsert()
       });
   },
 
-  getMigrationFileName: function () {
-    return locs.db().modelMigrationDir + "create_" 
-           + this.name.toLowerCase() + "s_table.php"
+  Formatter: {
+    get: function(what, modelField) {
+      return this[what+'Field'](modelField);
+    },
+
+    migrationField: function (modelField)
+    {
+      var start = '\t', middle, finish = modelField.name + "');";
+      switch (modelField.type) {
+          case 'string':
+            middle = "$table->string('";
+          case 'double':  
+            middle = "$table->double('";
+          case 'integer':
+            middle = "$table->integer('";
+          case 'datetime':
+            middle =  "$table->datetime('";
+          case 'text':
+            middle = "$table->text('";
+          default:
+            middle = "$table->string('";
+      }
+
+      return start+middle+finish;
+    },
+
+    factoryField: function(modelField){
+      switch(modelField.type){
+        case 'string':
+          finish = "$faker->name";
+        case 'double':  
+        case 'integer':
+          finish = "$faker->randomNumber(1)";
+        case 'datetime':
+          finish = "$faker->datetime()";
+        case 'text':
+          finish = "$faker->sentence";
+        default:
+          finish = '$faker->name';
+      }
+      return '\t"' + modelField.name + '" => ' + finish;
+    },
+
+  },
+  
+  buildMigrationInsert: function()
+  {
+        var fields = [],
+            i = 0;
+        
+        for(i; i < this.modelProperties.length; i++){
+          fields.push(this.Formatter.get('migration', this.modelProperties[i]));
+        }
+        
+        return fields.join("\n");
+  },
+
+  buildFactoryInsert: function()
+  {
+        var pathInsert = this.templatePath(locs.db().modelFactoryInsert),
+        newFactory = wiring.readFileAsString(pathInsert),
+        i = 0,
+        fields = [];
+        
+        for(i; i < this.modelProperties.length; i++){
+          fields.push(this.Formatter.get('factory', this.modelProperties[i]));
+        }
+
+        return newFactory
+          .replace("<fields>", fields.join(",\n"))
+          .replace("<modelName>",this.name);
   },
 
   prepareFactory: function() {
@@ -56,83 +124,10 @@ exports.Base = generators.Base.extend({
         );
   },
 
-  buildMigrationInsert: function()
-  {
-        var fields = [],
-            i = 0;
-        
-        for(i; i < this.modelProperties.length; i++){
-          fields.push(this.formatMigrationField(this.modelProperties[i]));
-        }
-        
-        return fields.join("\n");
-    
-  },
 
-  buildFactoryInsert: function()
-  {
-        var pathInsert = this.templatePath(locs.db().modelFactoryInsert),
-        newFactory = wiring.readFileAsString(pathInsert),
-        i = 0,
-        fields = [];
-        
-        for(i; i < this.modelProperties.length; i++){
-          fields.push(this.formatFactoryField(this.modelProperties[i]));
-        }
 
-        return newFactory
-          .replace("<fields>", fields.join(",\n"))
-          .replace("<modelName>",this.name);
-  },
 
-  formatFactoryField: function(modelField)
-  {
-        return '\t"'+ modelField.name +'" => ' 
-                    + this.getFaker(modelField.type);
-  },
-
-  formatMigrationField: function(modelField)
-  {
-        var created =  '\t'+ this.getMigration(modelField.type)
-                    + modelField.name
-                    + "');"
-        return created;
-  },
-
-  getMigration: function (fieldType)
-  {
-    switch (fieldType) {
-        case 'string':
-          return "$table->string('";
-        case 'double':  
-          return "$table->double('";
-        case 'integer':
-          return "$table->integer('";
-        case 'datetime':
-          return "$table->datetime('";
-        case 'text':
-          return "$table->text('";
-        default:
-          return "$table->string('";
-    }
-  },
      
-  getFaker: function(fieldType){
-      switch(fieldType){
-        case 'string':
-          return "$faker->name";
-        case 'double':  
-        case 'integer':
-          return "$faker->randomNumber(1)";
-        case 'datetime':
-          return "$faker->datetime()";
-        case 'text':
-          return "$faker->sentence";
-        default:
-          return '$faker->name';
-      }
-  },
-
   _combine: function(vars, types){
         var combined = [];
         vars.forEach(function(element) {
@@ -185,4 +180,3 @@ exports.Base = generators.Base.extend({
     }
   }
 });
-

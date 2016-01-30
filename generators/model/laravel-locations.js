@@ -6,8 +6,9 @@ exports.db = function() {
   return {
     modelFactory: "database/factories/ModelFactory.php",
     modelFactoryInsert: "database/factories/ModelFactory_insert.php",
-    modelMigration: "database/migrations/migration.php",
     modelMigrationDir: "database/migrations/",
+    migrationFile: "database/migrations/migration.php",
+    migrationFileDestination: "database/migrations/create_"+ this.caller.name.toLowerCase() + "s_table.php",
     modelFile: "app/model.php",
     modelFileDestination: "app/"+this.caller.name+".php",
     controllerFile: "app/Http/Controllers/Controller.php",
@@ -46,3 +47,4 @@ exports.copyTemplate = function ( thing, extraFunction ) {
         }
     );
 }
+
