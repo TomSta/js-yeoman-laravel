@@ -16,6 +16,7 @@ exports.Base = generators.Base.extend({
     this.modelProperties = [];
     this.namespace = '';
     locs.caller = this;
+    this.Inserts.caller = this;
   },
       
   addFactory: function () { 
@@ -36,7 +37,7 @@ exports.Base = generators.Base.extend({
       this.destinationPath(locs.db().migrationFileDestination),
       {
         name: this.name.toLowerCase(),
-        fields: this.buildMigrationInsert()
+        fields: this.Inserts.build( 'migration')
       });
   },
 
@@ -84,48 +85,45 @@ exports.Base = generators.Base.extend({
     },
 
   },
-  
-  buildMigrationInsert: function()
-  {
-        var fields = [],
-            i = 0;
-        
-        for(i; i < this.modelProperties.length; i++){
-          fields.push(this.Formatter.get('migration', this.modelProperties[i]));
-        }
-        
-        return fields.join("\n");
-  },
-
-  buildFactoryInsert: function()
-  {
-        var pathInsert = this.templatePath(locs.db().modelFactoryInsert),
-        newFactory = wiring.readFileAsString(pathInsert),
-        i = 0,
-        fields = [];
-        
-        for(i; i < this.modelProperties.length; i++){
-          fields.push(this.Formatter.get('factory', this.modelProperties[i]));
-        }
+ 
+  Inserts: {
+    migrationInsert: function ()
+    {
+          return this.formatProperties('migration').join("\n");
+    },
+     
+    factoryInsert: function()
+    {
+        var newFactory = wiring.readFileAsString(locs.getTemplatePath('factoryInsert'));
 
         return newFactory
-          .replace("<fields>", fields.join(",\n"))
-          .replace("<modelName>",this.name);
+          .replace("<fields>", this.formatProperties('factory').join(",\n"))
+          .replace("<modelName>",this.caller.name);
+    },
+
+    formatProperties: function ( formatter )
+    {
+        var fields = [], i = 0, caller = this.caller;
+        for(i; i < this.caller.modelProperties.length; i++){
+          fields.push(
+            caller.Formatter.get(formatter, this.caller.modelProperties[i])
+          );
+        }
+        return fields;
+    },
+
+    build: function ( what ) {
+      return this[what+'Insert']();
+    }
   },
+
 
   prepareFactory: function() {
-    var current = wiring.readFileAsString(this.destinationPath(locs.db().modelFactory)),
-        factoryInsert = this.buildFactoryInsert(),
-        newFactory = current + "\n" + factoryInsert;
-
-        wiring.writeFileFromString(
-              newFactory,
-              this.destinationPath(locs.db().modelFactory)
-        );
+    var current = wiring.readFileAsString(locs.getPath('modelFactory')),
+        newFactory = current + "\n" + this.Inserts.build('factory');
+        wiring.writeFileFromString( newFactory, locs.getPath('modelFactory') );
+        
   },
-
-
-
 
      
   _combine: function(vars, types){

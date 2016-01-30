@@ -5,7 +5,7 @@ var exports = module.exports = {};
 exports.db = function() { 
   return {
     modelFactory: "database/factories/ModelFactory.php",
-    modelFactoryInsert: "database/factories/ModelFactory_insert.php",
+    factoryInsertFile: "database/factories/ModelFactory_insert.php",
     modelMigrationDir: "database/migrations/",
     migrationFile: "database/migrations/migration.php",
     migrationFileDestination: "database/migrations/create_"+ this.caller.name.toLowerCase() + "s_table.php",
@@ -22,6 +22,12 @@ exports.db = function() {
     interfacesDir: "app/Interfaces/",
     controllerDir: "app/Http/Controllers/"
   }
+}
+
+
+exports.getPath = function ( what ){
+   return this.caller
+          .destinationPath( this.db()[what] );
 }
 
 exports.getTemplatePath = function ( what ){
