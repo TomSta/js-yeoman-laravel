@@ -30,14 +30,6 @@ exports.Base = generators.Base.extend({
     locs.copyTemplate( what );
   },
 
-  addRepository: function () {
-    locs.copyTemplate( 'repository', this.prepareRepositoryInterface );
-  },
-
-  prepareRepositoryInterface: function () {
-    locs.copyTemplate( 'repositoryInterface' );                  
-  },
-  
   prepareMigration: function () {
     this.fs.copyTpl(
       this.templatePath(locs.db().modelMigration),

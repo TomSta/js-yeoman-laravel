@@ -23,12 +23,12 @@ exports.db = function() {
   }
 }
 
-exports.getBT = function ( what ){
+exports.getTemplatePath = function ( what ){
    return this.caller
           .templatePath( this.db()[what+'File'] );
 }
 
-exports.getBD = function ( what ){
+exports.getDestinationPath = function ( what ){
    return this.caller
           .destinationPath( this.db()[what+'FileDestination'] );
 }
@@ -38,8 +38,8 @@ exports.copyTemplate = function ( thing, extraFunction ) {
     if ( extraFunction ) extraFunction(); 
     
     this.caller.fs.copyTpl(
-        locs.getBT( thing ), 
-        locs.getBD( thing ),
+        locs.getTemplatePath( thing ), 
+        locs.getDestinationPath( thing ),
         {
           namespace: this.caller.namespace,
           model: this.caller.name

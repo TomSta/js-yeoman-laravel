@@ -11,15 +11,13 @@
          }
     },
     
-
-
-
     writing: function() {
      this.addFactory();
      this.addMigration();
      this.addFromTemplate( 'model' );
      this.addFromTemplate( 'controller' );
-     this.addRepository();
+     this.addFromTemplate( 'repositoryInterface' );
+     this.addFromTemplate( 'repository' );
     },
 
   });
