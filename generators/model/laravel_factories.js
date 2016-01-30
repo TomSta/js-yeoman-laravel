@@ -15,8 +15,16 @@ exports.Base = generators.Base.extend({
     this.option('fields', {desc: 'fields for model'});
     this.modelProperties = [];
     this.namespace = '';
+<<<<<<< HEAD
+<<<<<<< HEAD
+    locs.caller = this.Inserts.caller = this;
+=======
     locs.caller = this;
     this.Inserts.caller = this;
+>>>>>>> 22aa885... pulled out inserts building to separate module, added getPath (for destination of any file in locs)
+=======
+    locs.caller = this.Inserts.caller = this;
+>>>>>>> 41ea73f... Merge branch 'master' of github.com:TomSta/js-yeoman-laravel
   },
       
   addFactory: function () { 
