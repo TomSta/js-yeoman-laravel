@@ -1,13 +1,14 @@
 
-var exports = module.exports = {},
-     _ = require('lodash'),
+var_ = require('lodash'),
      wiring = require('html-wiring');
      locs = require('./laravel-locations');
+     formatters = require('../formatters');
+     inserts = require('../inserts');
 
 
 var generators = require('yeoman-generator');
 
-exports.Base = generators.Base.extend({
+module.exports.Base = generators.Base.extend({
   
   constructor: function () {
     generators.Base.apply(this,arguments);
@@ -15,9 +16,7 @@ exports.Base = generators.Base.extend({
     this.option('fields', {desc: 'fields for model'});
     this.modelProperties = [];
     this.namespace = '';
-    locs.caller = this.Inserts.caller = this;
-    locs.caller = this;
-    locs.caller = this.Inserts.caller = this;
+    locs.caller = inserts.caller = this;
   },
       
   addFactory: function () { 
@@ -38,90 +37,14 @@ exports.Base = generators.Base.extend({
       this.destinationPath(locs.db().migrationFileDestination),
       {
         name: this.name.toLowerCase(),
-        fields: this.Inserts.build( 'migration')
+        fields: inserts.build( 'migration')
       });
   },
-
-  Formatter: {
-    get: function(what, modelField) {
-      return this[what+'Field'](modelField);
-    },
-
-    migrationField: function (modelField)
-    {
-      var start = '\t', middle, finish = modelField.name + "');";
-      switch (modelField.type) {
-          case 'string':
-            middle = "$table->string('";
-          case 'double':  
-            middle = "$table->double('";
-          case 'integer':
-            middle = "$table->integer('";
-          case 'datetime':
-            middle =  "$table->datetime('";
-          case 'text':
-            middle = "$table->text('";
-          default:
-            middle = "$table->string('";
-      }
-
-      return start+middle+finish;
-    },
-
-    factoryField: function(modelField){
-      switch(modelField.type){
-        case 'string':
-          finish = "$faker->name";
-        case 'double':  
-        case 'integer':
-          finish = "$faker->randomNumber(1)";
-        case 'datetime':
-          finish = "$faker->datetime()";
-        case 'text':
-          finish = "$faker->sentence";
-        default:
-          finish = '$faker->name';
-      }
-      return '\t"' + modelField.name + '" => ' + finish;
-    },
-
-  },
  
-  Inserts: {
-    migrationInsert: function ()
-    {
-          return this.formatProperties('migration').join("\n");
-    },
-     
-    factoryInsert: function()
-    {
-        var newFactory = wiring.readFileAsString(locs.getTemplatePath('factoryInsert'));
-
-        return newFactory
-          .replace("<fields>", this.formatProperties('factory').join(",\n"))
-          .replace("<modelName>",this.caller.name);
-    },
-
-    formatProperties: function ( formatter )
-    {
-        var fields = [], i = 0, caller = this.caller;
-        for(i; i < this.caller.modelProperties.length; i++){
-          fields.push(
-            caller.Formatter.get(formatter, this.caller.modelProperties[i])
-          );
-        }
-        return fields;
-    },
-
-    build: function ( what ) {
-      return this[what+'Insert']();
-    }
-  },
-
 
   prepareFactory: function() {
     var current = wiring.readFileAsString(locs.getPath('modelFactory')),
-        newFactory = current + "\n" + this.Inserts.build('factory');
+        newFactory = current + "\n" + inserts.build('factory');
         wiring.writeFileFromString( newFactory, locs.getPath('modelFactory') );
         
   },
