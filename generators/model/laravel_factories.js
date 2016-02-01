@@ -25,14 +25,11 @@ module.exports.Base = generator.Base.extend({
   }, 
     
   addFactory: function () { 
-    this.prepareFactory(); 
+    var current = wiring.readFileAsString(locs.getPath('modelFactory')),
+        newFactory = current + "\n" + inserts.build('factory');
+        wiring.writeFileFromString( newFactory, locs.getPath('modelFactory') );
   },
 
-  addMigration: function () { 
-    this.prepareMigration(); 
-  },
-
-  
   addWithFieldsBuild: function ( what ) {
     this.fs.copyTpl(
       locs.getTemplatePath( what ),
@@ -46,14 +43,6 @@ module.exports.Base = generator.Base.extend({
   addFromTemplate: function ( what ) {
     locs.copyTemplate( what );
   },
-
-  prepareFactory: function() {
-    var current = wiring.readFileAsString(locs.getPath('modelFactory')),
-        newFactory = current + "\n" + inserts.build('factory');
-        wiring.writeFileFromString( newFactory, locs.getPath('modelFactory') );
-        
-  },
-
      
   _combine: function(vars, types){
         var combined = [];
