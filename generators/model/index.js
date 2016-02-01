@@ -19,6 +19,7 @@
      this.addFromTemplate( 'repositoryInterface' );
      this.addFromTemplate( 'repository' );
      this.addFromTemplate( 'addView' );
+     this.addFromTemplate( 'indexView' );
     },
 
   });

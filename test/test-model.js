@@ -122,7 +122,11 @@ describe('yaylar:model', function () {
     
       it("for index, adding new model", function () {
       
-       assert.file([ viewsDir+modelName.toLowerCase()+"/add.blade.php" ]); 
+       assert.file([
+          viewsDir+modelName.toLowerCase()+"/add.blade.php",
+          viewsDir+modelName.toLowerCase()+"/index.blade.php"
+          
+          ]); 
       
       });
     
