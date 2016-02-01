@@ -1,56 +1,63 @@
 'use strict';
 
-var exports = module.exports = {};
-
-exports.db = function() { 
-  return {
-    modelFactory: "database/factories/ModelFactory.php",
-    factoryInsertFile: "database/factories/ModelFactory_insert.php",
-    modelMigrationDir: "database/migrations/",
-    migrationFile: "database/migrations/migration.php",
-    migrationFileDestination: "database/migrations/create_"+ this.caller.name.toLowerCase() + "s_table.php",
-    modelFile: "app/model.php",
-    modelFileDestination: "app/"+this.caller.name+".php",
-    controllerFile: "app/Http/Controllers/Controller.php",
-    controllerFileDestination: "app/Http/Controllers/"+this.caller.name+"Controller.php",
-    repositoryFile: "app/Repositories/Repository.php",
-    repositoryFileDestination: "app/Repositories/"+this.caller.name+"Repository.php",
-    modelDir: "app/",
-    repositoryDir: "app/Repositories/",
-    repositoryInterfaceFile: "app/Interfaces/RepositoryInterface.php",
-    repositoryInterfaceFileDestination: "app/Interfaces/"+this.caller.name+"RepositoryInterface.php",
-    interfacesDir: "app/Interfaces/",
-    controllerDir: "app/Http/Controllers/"
+module.exports = function(generator){
+  var module = {};
+  module.generator = generator;
+  
+  module.db = function() { 
+    return {
+      modelFactory: "database/factories/ModelFactory.php",
+      factoryInsertFile: "database/factories/ModelFactory_insert.php",
+      modelMigrationDir: "database/migrations/",
+      migrationFile: "database/migrations/migration.php",
+      migrationFileDestination: "database/migrations/create_"+ this.generator.name.toLowerCase() + "s_table.php",
+      modelFile: "app/model.php",
+      modelFileDestination: "app/"+this.generator.name+".php",
+      controllerFile: "app/Http/Controllers/Controller.php",
+      controllerFileDestination: "app/Http/Controllers/"+this.generator.name+"Controller.php",
+      repositoryFile: "app/Repositories/Repository.php",
+      repositoryFileDestination: "app/Repositories/"+this.generator.name+"Repository.php",
+      modelDir: "app/",
+      repositoryDir: "app/Repositories/",
+      repositoryInterfaceFile: "app/Interfaces/RepositoryInterface.php",
+      repositoryInterfaceFileDestination: "app/Interfaces/"+this.generator.name+"RepositoryInterface.php",
+      interfacesDir: "app/Interfaces/",
+      controllerDir: "app/Http/Controllers/"
+    }
   }
-}
 
 
-exports.getPath = function ( what ){
-   return this.caller
-          .destinationPath( this.db()[what] );
-}
+  module.getPath = function ( what ){
+     return this.generator
+            .destinationPath( this.db()[what] );
+  }
 
-exports.getTemplatePath = function ( what ){
-   return this.caller
-          .templatePath( this.db()[what+'File'] );
-}
+  module.getTemplatePath = function ( what ){
+     return this.generator
+            .templatePath( this.db()[what+'File'] );
+  }
 
-exports.getDestinationPath = function ( what ){
-   return this.caller
-          .destinationPath( this.db()[what+'FileDestination'] );
-}
+  module.getDestinationPath = function ( what ){
+     return this.generator
+            .destinationPath( this.db()[what+'FileDestination'] );
+  }
 
-exports.copyTemplate = function ( thing, extraFunction ) {
+  module.copyTemplate = function ( thing, extraFunction ) {
 
-    if ( extraFunction ) extraFunction(); 
-    
-    this.caller.fs.copyTpl(
-        locs.getTemplatePath( thing ), 
-        locs.getDestinationPath( thing ),
-        {
-          namespace: this.caller.namespace,
-          model: this.caller.name
-        }
-    );
-}
+      if ( extraFunction ) extraFunction(); 
+      
+      this.generator.fs.copyTpl(
+          this.getTemplatePath( thing ), 
+          this.getDestinationPath( thing ),
+          {
+            namespace: this.generator.namespace,
+            model: this.generator.name
+          }
+      );
+  }
+
+  return module;
+
+};
+
 

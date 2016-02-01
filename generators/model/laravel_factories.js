@@ -1,24 +1,29 @@
 
-var_ = require('lodash'),
-     wiring = require('html-wiring');
-     locs = require('./laravel-locations');
-     formatters = require('../formatters');
-     inserts = require('../inserts');
+var  generator = require('yeoman-generator'),
+     _ = require('lodash'),
+     formatters = require('../formatters'),
+     wiring = require('html-wiring'),
+     //below gets generator injected in constructor in bootstrap method
+     inserts,
+     locs;
 
-
-var generators = require('yeoman-generator');
-
-module.exports.Base = generators.Base.extend({
+module.exports.Base = generator.Base.extend({
   
   constructor: function () {
-    generators.Base.apply(this,arguments);
+    generator.Base.apply(this,arguments);
     this.argument('name', { type: String, required: true });
     this.option('fields', {desc: 'fields for model'});
     this.modelProperties = [];
     this.namespace = '';
-    locs.caller = inserts.caller = this;
+    this.bootstrapDependencies();
   },
-      
+
+  bootstrapDependencies: function () {
+    locs = require('./laravel-locations')(this);
+    inserts = require('../inserts')(this);
+
+  }, 
+    
   addFactory: function () { 
     this.prepareFactory(); 
   },

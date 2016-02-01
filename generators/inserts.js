@@ -1,30 +1,39 @@
-module.exports = {
-    migrationInsert: function ()
-    {
-          return this.formatProperties('migration').join("\n");
-    },
+var wiring = require('html-wiring'),
+    formatters = require('./formatters');
+
+module.exports = function (generator) {
+
+  var module = {};
+  
+  module.generator = generator;
+  module.locs = require('./model/laravel-locations')(generator);
+
+  module.migrationInsert = function () {
+    return this.formatProperties('migration').join("\n");
+  },
      
-    factoryInsert: function()
-    {
-        var newFactory = wiring.readFileAsString(locs.getTemplatePath('factoryInsert'));
+  module.factoryInsert = function() {
+    var newFactory = wiring.readFileAsString(this.locs.getTemplatePath('factoryInsert'));
 
-        return newFactory
-          .replace("<fields>", this.formatProperties('factory').join(",\n"))
-          .replace("<modelName>",this.caller.name);
+    return newFactory
+      .replace("<fields>", this.formatProperties('factory').join(",\n"))
+      .replace("<modelName>",this.generator.name);
     },
 
-    formatProperties: function ( formatter )
-    {
-        var fields = [], i = 0, caller = this.caller;
-        for(i; i < this.caller.modelProperties.length; i++){
-          fields.push(
-            formatters.get(formatter, this.caller.modelProperties[i])
-          );
-        }
-        return fields;
-    },
+  module.formatProperties = function ( formatter ) {
+    var fields = [], i = 0;
 
-    build: function ( what ) {
-      return this[what+'Insert']();
+    for(i; i < this.generator.modelProperties.length; i++){
+      fields.push(
+        formatters.get(formatter, this.generator.modelProperties[i])
+       );
     }
+    return fields;
+  },
+
+  module.build = function ( what ) {
+    return this[what+'Insert']();
   }
+
+  return module;
+}
