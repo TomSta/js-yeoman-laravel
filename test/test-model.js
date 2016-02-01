@@ -8,11 +8,14 @@ var expect = chai.expect;
 var should = chai.should();
 
 describe('yaylar:model', function () {
- var helper, answers, modelName, appDir, resourcesDir, file;
+ var helper, answers, modelName, appDir, viewsDir, file;
 
  describe('crud generator', function () {
     
     before( function (done) {
+    
+
+
         helper = helpers.run( path.join(__dirname, '../generators/model') )
         .inTmpDir(function (dir) {
               var done = this.async(); // `this` is the RunContext object.
@@ -31,7 +34,6 @@ describe('yaylar:model', function () {
           viewsDir = "resources/views/";
           done();
         });
-        
         
     });
 
@@ -118,18 +120,26 @@ describe('yaylar:model', function () {
 
     });
     
-    describe("creates laravel views", function () {
-    
-      it("for index, adding new model", function () {
-      
-       assert.file([
-          viewsDir+modelName.toLowerCase()+"/add.blade.php",
-          viewsDir+modelName.toLowerCase()+"/index.blade.php"
-          
-          ]); 
-      
+    describe("creates laravel view", function () {
+      var viewsDir, addViewFile, indexViewFile, field1, field2;
+
+      before ( function () {
+           viewsDir = "resources/views/"+modelName.toLowerCase(),
+           addViewFile = viewsDir +"/add.blade.php",
+           indexViewFile = viewsDir + "/index.blade.php";
+           field1 = helper.generator.modelProperties[0].name;
+      });
+
+      it("files for index, adding new model", function () {
+        assert.file([ addViewFile ]); 
       });
     
+      it("add model file contain form with fields", function () {
+        console.log(field1);      
+        assert.fileContent( addViewFile, field1 );
+      
+      });
+       
     });
 
 

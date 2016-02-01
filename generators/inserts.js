@@ -12,6 +12,10 @@ module.exports = function (generator) {
     return this.formatProperties('migration').join("\n");
   },
      
+  module.addViewInsert = function () {
+    return this.formatProperties('addView').join("\n");
+  },
+
   module.factoryInsert = function() {
     var newFactory = wiring.readFileAsString(this.locs.getTemplatePath('factoryInsert'));
 
@@ -32,6 +36,9 @@ module.exports = function (generator) {
   },
 
   module.build = function ( what ) {
+//    console.log("build func calling "+what);
+//    if(what == "addView")
+//      console.log("this is from build func", this[what+'Insert']());
     return this[what+'Insert']();
   }
 

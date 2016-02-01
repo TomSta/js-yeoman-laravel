@@ -27,6 +27,10 @@ module.exports.Base = generator.Base.extend({
   addFactory: function () { 
     this.prepareFactory(); 
   },
+
+  addAddView: function () {
+    this.prepareAddView();
+  },
   
   addMigration: function () { 
     this.prepareMigration(); 
@@ -46,6 +50,20 @@ module.exports.Base = generator.Base.extend({
       });
   },
  
+  prepareAddView: function () {
+    var parameters = {
+        name: this.name.toLowerCase(),
+        fields: inserts.build( 'addView'),
+        someParam: "222dddd"
+      };
+    
+    console.log(parameters);
+    this.fs.copyTpl(
+      locs.getTemplatePath('addView'),
+      locs.getDestinationPath('addView'),
+      parameters
+    );
+  },
 
   prepareFactory: function() {
     var current = wiring.readFileAsString(locs.getPath('modelFactory')),

@@ -3,8 +3,25 @@ module.exports = {
       return this[what+'Field'](modelField);
     },
 
-    migrationField: function (modelField)
-    {
+    addViewField: function ( mF ) {
+      console.log("inside formatters");
+      var start = "@include('formfields",
+          middle, finish = "])";
+
+      switch ( mF.type ) {
+        case 'integer':
+        case 'string': 
+        default:
+          middle = ".textInput', ["
+                 +"'title'=> '" + mF.name + "',"
+                 + "'name' => '"+mF.name.toLowerCase()+"'";
+          break;
+      }
+      //console.log(start);
+      return start+middle+finish;
+    },
+
+    migrationField: function ( modelField ) {
       var start = '\t', middle, finish = modelField.name + "');";
       switch (modelField.type) {
           case 'string':
