@@ -1,6 +1,6 @@
 <?php
 
-namespace <%- namespace %>Http\Controllers;
+namespace <%- namespace %>\Http\Controllers;
 
 use Illuminate\Http\Request;
 
@@ -21,10 +21,10 @@ class <%- model %>Controller extends Controller
 		return view('<%- model.toLowerCase() %>.index', ['<%- model.toLowerCase() %>Collection' => $this->repo->getAll()]);
 	}
 
-	public function showParty($partySlug){
+	public function show($id){
 
-    $party = $this->repo->getPartyBySlug($partySlug);
-		return view('<%- model.toLowerCase() %>.show', ['<%- model.toLowerCase() %>' => $party]);
+		$<%- model.toLowerCase() %> = $this->repo->getOne($id);
+		return view('<%- model.toLowerCase() %>.show', ['<%- model.toLowerCase() %>' => $<%- model.toLowerCase() %>]);
 	}
 
   public function submit(){
