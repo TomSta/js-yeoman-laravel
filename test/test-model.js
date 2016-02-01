@@ -128,6 +128,7 @@ describe('yaylar:model', function () {
            addViewFile = viewsDir +"/add.blade.php",
            indexViewFile = viewsDir + "/index.blade.php";
            field1 = helper.generator.modelProperties[0].name;
+           field2 = helper.generator.modelProperties[1].name;
       });
 
       it("files for index, adding new model", function () {
@@ -135,9 +136,7 @@ describe('yaylar:model', function () {
       });
     
       it("add model file contain form with fields", function () {
-        console.log(field1);      
         assert.fileContent( addViewFile, field1 );
-      
       });
        
     });

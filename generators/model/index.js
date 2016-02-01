@@ -13,13 +13,13 @@
     
     writing: function() {
      this.addFactory();
-     this.addMigration();
      this.addFromTemplate( 'model' );
      this.addFromTemplate( 'controller' );
      this.addFromTemplate( 'repositoryInterface' );
      this.addFromTemplate( 'repository' );
-     this.addAddView();
      this.addFromTemplate( 'indexView' );
+     this.addWithFieldsBuild( 'addView' );
+     this.addWithFieldsBuild( 'migration' );
     },
 
   });

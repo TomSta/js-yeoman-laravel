@@ -28,41 +28,23 @@ module.exports.Base = generator.Base.extend({
     this.prepareFactory(); 
   },
 
-  addAddView: function () {
-    this.prepareAddView();
-  },
-  
   addMigration: function () { 
     this.prepareMigration(); 
   },
 
-  addFromTemplate: function ( what ) {
-    locs.copyTemplate( what );
-  },
-
-  prepareMigration: function () {
+  
+  addWithFieldsBuild: function ( what ) {
     this.fs.copyTpl(
-      this.templatePath(locs.db().migrationFile),
-      this.destinationPath(locs.db().migrationFileDestination),
+      locs.getTemplatePath( what ),
+      locs.getDestinationPath( what ),
       {
         name: this.name.toLowerCase(),
-        fields: inserts.build( 'migration')
+        fields: inserts.build( what )
       });
-  },
- 
-  prepareAddView: function () {
-    var parameters = {
-        name: this.name.toLowerCase(),
-        fields: inserts.build( 'addView'),
-        someParam: "222dddd"
-      };
-    
-    console.log(parameters);
-    this.fs.copyTpl(
-      locs.getTemplatePath('addView'),
-      locs.getDestinationPath('addView'),
-      parameters
-    );
+  }, 
+
+  addFromTemplate: function ( what ) {
+    locs.copyTemplate( what );
   },
 
   prepareFactory: function() {
