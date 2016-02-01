@@ -8,3 +8,4 @@ typings*
 tmp_data*
 database
 *.swo
+*.swn

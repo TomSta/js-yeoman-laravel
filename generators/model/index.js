@@ -18,6 +18,7 @@
      this.addFromTemplate( 'controller' );
      this.addFromTemplate( 'repositoryInterface' );
      this.addFromTemplate( 'repository' );
+     this.addFromTemplate( 'addView' );
     },
 
   });

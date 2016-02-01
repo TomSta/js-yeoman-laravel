@@ -8,7 +8,7 @@ var expect = chai.expect;
 var should = chai.should();
 
 describe('yaylar:model', function () {
- var helper, answers, modelName, appDir, file;
+ var helper, answers, modelName, appDir, resourcesDir, file;
 
  describe('crud generator', function () {
     
@@ -28,6 +28,7 @@ describe('yaylar:model', function () {
           answers = helper.answers;
           modelName = helper.args[0];
           appDir = 'app/';
+          viewsDir = "resources/views/";
           done();
         });
         
@@ -117,7 +118,17 @@ describe('yaylar:model', function () {
 
     });
     
- 
+    describe("creates laravel views", function () {
+    
+      it("for index, adding new model", function () {
+      
+       assert.file([ viewsDir+modelName.toLowerCase()+"/add.blade.php" ]); 
+      
+      });
+    
+    });
+
+
   });   
   
 });

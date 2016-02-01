@@ -17,6 +17,8 @@ module.exports = function(generator){
       controllerFileDestination: "app/Http/Controllers/"+this.generator.name+"Controller.php",
       repositoryFile: "app/Repositories/Repository.php",
       repositoryFileDestination: "app/Repositories/"+this.generator.name+"Repository.php",
+      addViewFile: "views/add.blade.php",
+      addViewFileDestination: "resources/views/"+this.generator.name.toLowerCase()+"/add.blade.php",
       modelDir: "app/",
       repositoryDir: "app/Repositories/",
       repositoryInterfaceFile: "app/Interfaces/RepositoryInterface.php",
