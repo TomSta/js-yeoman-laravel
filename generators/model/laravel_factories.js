@@ -66,7 +66,7 @@ module.exports.Base = generator.Base.extend({
             type: 'input',
             name: 'namespace',
             message: 'set model namespace',
-            default: 'App\\'
+            default: 'App'
           }],
           typeAnswers = [],
           done= this.async();
