@@ -17,16 +17,24 @@
 
      if ( this.creationList.indexOf('model') > -1)
        this.addFromTemplate( 'model' );
+
      if ( this.creationList.indexOf('controller') > -1)
        this.addFromTemplate( 'controller' );
-     if ( this.creationList.indexOf('model') > -1)
-       this.addFromTemplate( 'repositoryInterface' );
+     
+     if ( this.creationList.indexOf('repository') > -1)
+     {
        this.addFromTemplate( 'repository' );
+       this.addFromTemplate( 'repositoryInterface' );
+     }
+     
      if ( this.creationList.indexOf('views') > -1)
+     {
        this.addFromTemplate( 'indexView' );
        this.addWithFieldsBuild( 'addView' );
+     }
+     
      if ( this.creationList.indexOf('migration') > -1)
-     this.addWithFieldsBuild( 'migration' );
+       this.addWithFieldsBuild( 'migration' );
     },
 
   });

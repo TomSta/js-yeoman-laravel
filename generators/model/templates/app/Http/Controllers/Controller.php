@@ -28,7 +28,7 @@ class <%- model %>Controller extends Controller
     public function index()
     {
         return view( '<%- model.toLowerCase() %>.index', 
-		   [ '<%- model.toLowerCase() %>Collection'
+		   [ 'dataCollection'
 		       => $this->repository->getAll() ] );
     }
 
@@ -54,7 +54,7 @@ class <%- model %>Controller extends Controller
     public function store()
     {
     $newEvent = factory(<%- model %>::class)
-      ->create($this>request->except(['submit']));
+      ->create($this->request->except(['submit']));
     
     return back()->with('status', '<%- model %> added!');
     }

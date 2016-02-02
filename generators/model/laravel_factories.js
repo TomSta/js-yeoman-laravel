@@ -87,8 +87,18 @@ module.exports.Base = generator.Base.extend({
                 value: "views",
                 checked: true
               },
+              { 
+                name: "repository",
+                value: "repository",
+                checked: true
+              },
               {
-                name: "views",
+                name: "factory",
+                value: "factory",
+                checked: true
+              },
+              {
+                name: "migration",
                 value: "migration",
                 checked: true
               },

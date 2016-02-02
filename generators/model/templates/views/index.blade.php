@@ -1,4 +1,4 @@
-@foreach($categories as $category)
-	{{$category->name}}
+@foreach($dataCollection as $row)
+	{{$row->name}}
 @endforeach
 

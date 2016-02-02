@@ -2,7 +2,7 @@
 namespace <%- namespace %>\Repositories;
 
 use <%- namespace %>\<%- model %>;
-use <%- namespace %>\interfaces\<%- model %>RepositoryInterface;
+use <%- namespace %>\Interfaces\<%- model %>RepositoryInterface;
 
 class <%- model %>Repository implements <%- model %>RepositoryInterface {
 
@@ -17,10 +17,10 @@ class <%- model %>Repository implements <%- model %>RepositoryInterface {
 	public function findOneBy( $criteria_array ) {
 		return <%- model %>::where( $criteria_array )->first();
 
-	};
+	}
 	public function findAllBy( $criteria_array ) {
 		return <%- model %>::where( $criteria_array )->get();
-	};
+	}
 
 }
 
