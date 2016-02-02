@@ -66,7 +66,7 @@ module.exports.Base = generator.Base.extend({
             type: 'input',
             name: 'namespace',
             message: 'set model namespace',
-            default: 'App'
+            default: true
           }, {
             type: 'checkbox',
             name: 'creationList',
@@ -102,7 +102,8 @@ module.exports.Base = generator.Base.extend({
                 value: "migration",
                 checked: true
               },
-            ]
+            ],
+            store: true
      
           }],
           typeAnswers = [],
@@ -114,6 +115,7 @@ module.exports.Base = generator.Base.extend({
                   type: 'rawlist',
                   name: fields[i]+'_type',
                   message: 'field type for '+fields[i],
+                  store: true,
                   choices: [
                       "string",
                       "integer",
