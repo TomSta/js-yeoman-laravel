@@ -1,0 +1,3 @@
+## TODO
+
+- set field formatters (for forms, migrations, factories) to external json file
