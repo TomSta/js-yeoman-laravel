@@ -5,16 +5,30 @@ module.exports = {
 
     addViewField: function ( mF ) {
       console.log("inside formatters");
-      var start = "@include('formfields",
-          middle, finish = "])";
+      var start = "@include('formfields.",
+          middle, finish = "', ["
+                 +"'title'=> '" + mF.name + "',"
+                 + "'name' => '"+mF.name.toLowerCase()+"'])";
 
       switch ( mF.type ) {
         case 'integer':
+        case 'double':
+          middle = "integerInput";
+          break;
+        case 'datetime':
+          middle = "datetimeInput";
+          break;
+        case 'blob':
+          middle = "fileInput";
+          break;
+        case 'text':                 
+          middle = "textareaInput"; 
+          break;
         case 'string': 
+          middle = "textInput"; 
+          break;
         default:
-          middle = ".textInput', ["
-                 +"'title'=> '" + mF.name + "',"
-                 + "'name' => '"+mF.name.toLowerCase()+"'";
+          middle = "textInput";
           break;
       }
       //console.log(start);
