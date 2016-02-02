@@ -79,17 +79,17 @@ module.exports.Base = generator.Base.extend({
               },
               {
                 name: "controller",
-                value: "model",
-                checked: true
-              },
-              {
-                name: "repository",
-                value: "model",
+                value: "controller",
                 checked: true
               },
               {
                 name: "views",
-                value: "model",
+                value: "views",
+                checked: true
+              },
+              {
+                name: "views",
+                value: "migration",
                 checked: true
               },
             ]
@@ -118,6 +118,7 @@ module.exports.Base = generator.Base.extend({
           this.prompt(questions, function (answers) {
               this.modelProperties = this._combine(fields, answers);
               this.namespace = answers.namespace;
+              this.creationList = answers.creationList;
               done();
       }.bind(this));      
     }

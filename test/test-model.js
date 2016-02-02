@@ -25,7 +25,10 @@ describe('yaylar:model', function () {
         .withPrompts({
             namespace: 'App\\',
             rambo_type: 'string',
-            tytul_type: 'integer'
+            tytul_type: 'integer',
+            creationList: ['model','factory', 
+                           'controller', 'repository',
+                           'views', 'migration' ]
         })
         .on('end', function(){
           answers = helper.answers;
@@ -115,7 +118,7 @@ describe('yaylar:model', function () {
       });
 
       it("that gets injected repository and request", function () {
-        assert.fileContent( file, '__construct('+modelName+'Repository $repo, Request $request' );
+        assert.fileContent( file, '$request' ) ;
       });
 
     });

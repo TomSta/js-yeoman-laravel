@@ -12,13 +12,20 @@
     },
     
     writing: function() {
-     this.addFactory();
-     this.addFromTemplate( 'model' );
-     this.addFromTemplate( 'controller' );
-     this.addFromTemplate( 'repositoryInterface' );
-     this.addFromTemplate( 'repository' );
-     this.addFromTemplate( 'indexView' );
-     this.addWithFieldsBuild( 'addView' );
+     if ( this.creationList.indexOf('factory') > -1)
+       this.addFactory();
+
+     if ( this.creationList.indexOf('model') > -1)
+       this.addFromTemplate( 'model' );
+     if ( this.creationList.indexOf('controller') > -1)
+       this.addFromTemplate( 'controller' );
+     if ( this.creationList.indexOf('model') > -1)
+       this.addFromTemplate( 'repositoryInterface' );
+       this.addFromTemplate( 'repository' );
+     if ( this.creationList.indexOf('views') > -1)
+       this.addFromTemplate( 'indexView' );
+       this.addWithFieldsBuild( 'addView' );
+     if ( this.creationList.indexOf('migration') > -1)
      this.addWithFieldsBuild( 'migration' );
     },
 
