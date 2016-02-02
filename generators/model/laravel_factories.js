@@ -62,18 +62,45 @@ module.exports.Base = generator.Base.extend({
     if(this.options.fields){
       var i = 0,
           fields = this.options.fields.split(','),
-          typeQuestions = [{
+          questions = [{
             type: 'input',
             name: 'namespace',
             message: 'set model namespace',
             default: 'App'
+          }, {
+            type: 'checkbox',
+            name: 'creationList',
+            message: 'What do you want to create?',
+            choices: [
+              {
+                name: "model",
+                value: "model",
+                checked: true
+              },
+              {
+                name: "controller",
+                value: "model",
+                checked: true
+              },
+              {
+                name: "repository",
+                value: "model",
+                checked: true
+              },
+              {
+                name: "views",
+                value: "model",
+                checked: true
+              },
+            ]
+     
           }],
           typeAnswers = [],
           done= this.async();
           
           for(i = 0; i < fields.length; i++)
           {
-              typeQuestions.push({
+              questions.push({
                   type: 'rawlist',
                   name: fields[i]+'_type',
                   message: 'field type for '+fields[i],
@@ -88,7 +115,7 @@ module.exports.Base = generator.Base.extend({
                   ]});
           }
           
-          this.prompt(typeQuestions, function (answers) {
+          this.prompt(questions, function (answers) {
               this.modelProperties = this._combine(fields, answers);
               this.namespace = answers.namespace;
               done();
