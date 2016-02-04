@@ -5,4 +5,5 @@
 - 2. [ ] option to copy and use in generator's project dir
 
 ####2. Some docs would be good.
-
+#
+####3. Resolve conflicts - append differences
