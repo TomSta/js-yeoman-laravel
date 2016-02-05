@@ -1,9 +1,9 @@
-module.exports = {
-    get: function(what, modelField) {
+    var fields = require('../configs/fields.json'); 
+    this.get = function(what, modelField) {
       return this[what+'Field'](modelField);
-    },
+    }
 
-    addViewField: function ( mF ) {
+    this.addViewField = function ( mF ) {
       console.log("inside formatters");
       var start = "@include('formfields.",
           middle, finish = "', ["
@@ -33,10 +33,17 @@ module.exports = {
       }
       //console.log(start);
       return start+middle+finish;
-    },
+    };
 
-    migrationField: function ( modelField ) {
-      var start = '\t', middle, finish = modelField.name + "');";
+    this.migrationField = function ( modelField ) {
+      var field = fields.indent 
+                  + fields.migration[modelField.type];
+
+      field.replace("FIELDNAME", modelField.name);
+      console.log('returning', field);
+      return field;
+      var start = fields.migration.start,
+          finish = modelField.name + "');";
       switch (modelField.type) {
           case 'string':
             middle = "$table->string('";
@@ -53,9 +60,9 @@ module.exports = {
       }
 
       return start+middle+finish;
-    },
+    };
 
-    factoryField: function(modelField){
+    this.factoryField = function(modelField){
       switch(modelField.type){
         case 'string':
           finish = "$faker->name";
@@ -70,6 +77,5 @@ module.exports = {
           finish = '$faker->name';
       }
       return '\t"' + modelField.name + '" => ' + finish;
-    },
+    };
 
-  }

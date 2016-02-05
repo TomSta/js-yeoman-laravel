@@ -1,8 +1,6 @@
 
 var  generator = require('yeoman-generator'),
-     _ = require('lodash'),
      spawn = require('child_process').spawn,
-    formatters = require('../formatters'),
      wiring = require('html-wiring'),
      //below gets generator injected in constructor in bootstrap method
      inserts,

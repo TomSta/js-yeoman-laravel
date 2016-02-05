@@ -1,0 +1,10 @@
+{
+ "indent": "\t",
+ "migration": {
+	"string": "$table->string('FIELDNAME');",
+	"double": "$table->double('FIELDNAME');",
+	"integer": "$table->integer('FIELDNAME');",
+	"datetime": "$table->datetime('FIELDNAME');",
+	"text": "$table->text('FIELDNAME');"
+ }
+}
