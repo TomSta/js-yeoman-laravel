@@ -34,7 +34,8 @@
      }
      
      if ( this.creationList.indexOf('migration') > -1)
-       this.addWithFieldsBuild( 'migration' );
+       this.addMigration();
+//       this.addWithFieldsBuild( 'migration' );
     },
 
   });

@@ -1,7 +1,8 @@
 
 var  generator = require('yeoman-generator'),
      _ = require('lodash'),
-     formatters = require('../formatters'),
+     spawn = require('child_process').spawn,
+    formatters = require('../formatters'),
      wiring = require('html-wiring'),
      //below gets generator injected in constructor in bootstrap method
      inserts,
@@ -14,6 +15,7 @@ module.exports.Base = generator.Base.extend({
     this.argument('name', { type: String, required: true });
     this.option('fields', {desc: 'fields for model'});
     this.modelProperties = [];
+    this.locationsFile = "../../configs/cnf_locations.json";
     this.namespace = '';
     this.bootstrapDependencies();
   },
@@ -24,11 +26,6 @@ module.exports.Base = generator.Base.extend({
 
   }, 
     
-  addFactory: function () { 
-    var current = wiring.readFileAsString(locs.getPath('modelFactory')),
-        newFactory = current + "\n" + inserts.build('factory');
-        wiring.writeFileFromString( newFactory, locs.getPath('modelFactory') );
-  },
 
   addWithFieldsBuild: function ( what ) {
     this.fs.copyTpl(
@@ -39,6 +36,29 @@ module.exports.Base = generator.Base.extend({
         fields: inserts.build( what )
       });
   }, 
+  
+  addFactory: function () { 
+    var current = wiring.readFileAsString(locs.locations.modelFactory),
+        newFactory = current + "\n" + inserts.build('factory');
+        wiring.writeFileFromString( newFactory, locs.locations.modelFactory );
+  },
+
+  addMigration: function () {
+     var command = spawn('php', ['artisan', 'make:migration', this.name]);
+     var context = this; //for reference addWithFieldsBuild
+
+     /* get migration file created by laravel 
+        and assign it as a destination file for new migration
+     */
+
+     command.stdout.on('data', function (data) {
+        //create migrat
+        var migrationFile = data.toString().split(' ')[2].trim()+".php";
+        locs.locations.migrationFileDestination += migrationFile;
+        context.addWithFieldsBuild('migration');
+     });
+
+  },
 
   addFromTemplate: function ( what ) {
     locs.copyTemplate( what );
@@ -66,7 +86,8 @@ module.exports.Base = generator.Base.extend({
             type: 'input',
             name: 'namespace',
             message: 'set model namespace',
-            default: true
+            default: 'App',
+            store: true
           }, {
             type: 'checkbox',
             name: 'creationList',

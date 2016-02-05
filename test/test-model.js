@@ -44,19 +44,19 @@ describe('yaylar:model', function () {
      file = null;
    } ); 
     
-    describe('creates migration', function () {
-      it('file', function () {    
-          assert.file([
-              'database/migrations/create_newmodels_table.php'
-              ]);
-      });
-
-      it('with filled up table', function () {
-           assert.fileContent(
-                'database/migrations/create_newmodels_table.php',
-                "$table->string('rambo');");
-      });
-    });
+//   describe('creates migration', function () {
+//     it('file', function () {    
+//         assert.file([
+//             'database/migrations/create_newmodels_table.php'
+//             ]);
+//     });
+//
+//     it('with filled up table', function () {
+//          assert.fileContent(
+//               'database/migrations/create_newmodels_table.php',
+//               "$table->string('rambo');");
+//     });
+//   });
     
     describe('creates factory', function () {
       it('and adds factory in laravel\'s ModelFactor.php', function () {

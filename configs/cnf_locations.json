@@ -1,0 +1,19 @@
+{
+ "modelFactory": "database/factories/ModelFactory.php",
+ "modelFile": "app/model.php",
+ "modelFileDestination": "app/GENERATORNAME.php",
+ "migrationFile": "database/migrations/migration.php",
+ "migrationFileDestination": "database/migrations/",
+ "factoryInsertFile": "database/factories/ModelFactory_insert.php",
+ "controllerFile": "app/Http/Controllers/Controller.php",
+ "controllerFileDestination": "app/Http/Controllers/GENERATORNAMEController.php",
+ "repositoryFile": "app/Repositories/Repository.php",
+ "repositoryFileDestination": "app/Repositories/GENERATORNAMERepository.php",
+ "repositoryInterfaceFile": "app/Interfaces/RepositoryInterface.php",
+ "indexViewFile": "views/index.blade.php",
+ "indexViewFileDestination": "resources/views/GeneratorName/index.blade.php",
+ "addViewFile": "views/add.blade.php",
+ "addViewFileDestination": "resources/views/GeneratorName/add.blade.php",
+ "repositoryInterfaceFile": "app/Interfaces/RepositoryInterface.php",
+ "repositoryInterfaceFileDestination": "app/Interfaces/GENERATORNAMERepositoryInterface.php"
+}

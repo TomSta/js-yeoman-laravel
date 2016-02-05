@@ -1,34 +1,27 @@
 'use strict';
 
 module.exports = function(generator){
-  var module = {};
+  var module = { };
+
   module.generator = generator;
   
-  module.db = function() { 
-    return {
-      modelFactory: "database/factories/ModelFactory.php",
-      factoryInsertFile: "database/factories/ModelFactory_insert.php",
-      modelMigrationDir: "database/migrations/",
-      migrationFile: "database/migrations/migration.php",
-      migrationFileDestination: "database/migrations/create_"+ this.generator.name.toLowerCase() + "s_table.php",
-      modelFile: "app/model.php",
-      modelFileDestination: "app/"+this.generator.name+".php",
-      controllerFile: "app/Http/Controllers/Controller.php",
-      controllerFileDestination: "app/Http/Controllers/"+this.generator.name+"Controller.php",
-      repositoryFile: "app/Repositories/Repository.php",
-      repositoryFileDestination: "app/Repositories/"+this.generator.name+"Repository.php",
-      addViewFile: "views/add.blade.php",
-      addViewFileDestination: "resources/views/"+this.generator.name.toLowerCase()+"/add.blade.php",
-      indexViewFile: "views/index.blade.php",
-      indexViewFileDestination: "resources/views/"+this.generator.name.toLowerCase()+"/index.blade.php",
-      modelDir: "app/",
-      repositoryDir: "app/Repositories/",
-      repositoryInterfaceFile: "app/Interfaces/RepositoryInterface.php",
-      repositoryInterfaceFileDestination: "app/Interfaces/"+this.generator.name+"RepositoryInterface.php",
-      interfacesDir: "app/Interfaces/",
-      controllerDir: "app/Http/Controllers/"
-    }
+  module.config = function(){
+     module.locations = require(generator.locationsFile);
+
+     //change locations object to contain model name in paths 
+     for(var loc in module.locations)
+     {
+        module.locations[loc] = module
+                              .configTransforms(module.locations[loc]);  
+     }
   }
+
+  module.configTransforms = function (str) {
+    return str
+            .replace("GENERATORNAME", this.generator.name)
+            .replace("GeneratorName", this.generator.name.toLowerCase());
+  }
+  
 
 
   module.getPath = function ( what ){
@@ -38,12 +31,12 @@ module.exports = function(generator){
 
   module.getTemplatePath = function ( what ){
      return this.generator
-            .templatePath( this.db()[what+'File'] );
+            .templatePath( this.locations[what+'File'] );
   }
 
   module.getDestinationPath = function ( what ){
      return this.generator
-            .destinationPath( this.db()[what+'FileDestination'] );
+            .destinationPath( this.locations[what+'FileDestination'] );
   }
 
   module.copyTemplate = function ( thing, extraFunction ) {
@@ -60,6 +53,7 @@ module.exports = function(generator){
       );
   }
 
+  module.config();
   return module;
 
 };
