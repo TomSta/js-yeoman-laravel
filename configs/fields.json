@@ -1,10 +1,29 @@
 {
  "indent": "\t",
  "migration": {
-	"string": "$table->string('FIELDNAME');",
-	"double": "$table->double('FIELDNAME');",
-	"integer": "$table->integer('FIELDNAME');",
-	"datetime": "$table->datetime('FIELDNAME');",
-	"text": "$table->text('FIELDNAME');"
+	"start": "$table->",
+	"end": ";",
+	"string": "string('FIELDNAME')",
+	"double": "double('FIELDNAME')",
+	"integer": "integer('FIELDNAME')",
+	"datetime": "datetime('FIELDNAME')",
+	"text": "text('FIELDNAME');"
+ },
+ "factory": {
+	"start": "\"FIELDNAME\" => $faker->",
+	"string": "name",
+	"double": "randomNumber(1)",
+	"integer": "randomNumber(1)",
+	"datetime": "datetime()",
+	"text": "sentence"
+ },
+ "addView": {
+	"start": "@include('formfields.",
+	"end": "', [ 'title' => 'FIELDNAME', 'name' => 'fieldname' ]",
+	"integer": "integerInput",
+	"double": "datetimeInput",
+	"blob": "fileInput",
+	"text": "textareaInput",
+	"string": "textInput"
  }
 }
