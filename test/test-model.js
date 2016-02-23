@@ -11,9 +11,9 @@ describe('yaylar:model', function () {
  var helper, answers, modelName, appDir, viewsDir, file;
 
  describe('crud generator', function () {
-    
+
     before( function (done) {
-    
+
 
 
         helper = helpers.run( path.join(__dirname, '../generators/model') )
@@ -26,7 +26,7 @@ describe('yaylar:model', function () {
             namespace: 'App\\',
             rambo_type: 'string',
             tytul_type: 'integer',
-            creationList: ['model','factory', 
+            creationList: ['model','factory',
                            'controller', 'repository',
                            'views', 'migration' ]
         })
@@ -37,15 +37,15 @@ describe('yaylar:model', function () {
           viewsDir = "resources/views/";
           done();
         });
-        
+
     });
 
    beforeEach ( function () {
      file = null;
-   } ); 
-    
+   } );
+
 //   describe('creates migration', function () {
-//     it('file', function () {    
+//     it('file', function () {
 //         assert.file([
 //             'database/migrations/create_newmodels_table.php'
 //             ]);
@@ -57,17 +57,17 @@ describe('yaylar:model', function () {
 //               "$table->string('rambo');");
 //     });
 //   });
-    
+
     describe('creates factory', function () {
       it('and adds factory in laravel\'s ModelFactor.php', function () {
            assert.fileContent(
                 'database/factories/ModelFactory.php',
                 '"rambo" => $faker->name');
-      }); 
+      });
     });
 
     describe("creates model", function () {
-    
+
       it("with namespace from prompt", function () {
         expect(answers).to.include.keys('namespace');
         expect(answers.namespace).to.contain('App\\');
@@ -78,17 +78,17 @@ describe('yaylar:model', function () {
 
         assert.file([ file ]);
         assert.fileContent( file, 'class '+modelName);
-          
+
       });
-    
+
     });
 
     describe("creates repository", function () {
-      
-  
+
+
       it("interface", function () {
         file = appDir+'Interfaces/'+modelName+'RepositoryInterface.php';
-        assert.file([ file ]); 
+        assert.file([ file ]);
       });
 
       it("file implementing interface", function () {
@@ -96,7 +96,7 @@ describe('yaylar:model', function () {
         assert.fileContent( file, modelName+'Repository implements '+ modelName+'RepositoryInterface');
       });
 
-    
+
     });
 
     describe("creates controller", function () {
@@ -104,9 +104,9 @@ describe('yaylar:model', function () {
       beforeEach ( function () {
         file = appDir + 'Http/Controllers/'+modelName+'Controller.php';
       } );
-      
+
       it('in the right place', function () {
-        assert.file([ file ]); 
+        assert.file([ file ]);
       });
 
       it("with methods for crud", function () {
@@ -122,7 +122,7 @@ describe('yaylar:model', function () {
       });
 
     });
-    
+
     describe("creates laravel view", function () {
       var viewsDir, addViewFile, indexViewFile, field1, field2;
 
@@ -135,16 +135,16 @@ describe('yaylar:model', function () {
       });
 
       it("files for index, adding new model", function () {
-        assert.file([ addViewFile ]); 
+        assert.file([ addViewFile ]);
       });
-    
+
       it("add model file contain form with fields", function () {
         assert.fileContent( addViewFile, field1 );
       });
-       
+
     });
 
 
-  });   
-  
+  });
+
 });
