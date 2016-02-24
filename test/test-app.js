@@ -37,7 +37,9 @@ describe('yaylar:app', function () {
    });
 
 
-
+   it("asks if laravel repo should be cloned", function(){
+     assert.isBoolean(answers.clone_laravel);
+   });
 
    it("asks if composer should be run", function(){
       assert.isBoolean(answers.composer_install);
@@ -47,14 +49,6 @@ describe('yaylar:app', function () {
        assert.isBoolean(answers.npm_install);
    });
 
-    it("asks if laravel repo should be cloned", function(){
-      assert.isBoolean(answers.clone_laravel);
-    });
-
-
-
   });
-
-
 
 });

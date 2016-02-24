@@ -23,8 +23,8 @@
        message : 'run npm install?'
      },{
        type    : 'confirm',
-       name    : 'run composer install?',
-       message : 'run npm install?'
+       name    : 'composer_install',
+       message : 'download and run composer install?'
      }
 
    ], function (answers_prompt) {
@@ -37,23 +37,29 @@
 
     },
     installing: function(){
+      var msg;
+      if(answers.clone_laravel)
+      {
+        this.log('Getting Laravel...');
+        msg = commands.getLaravel() ? 'got Laravel' : 'Got error so you already have it!';
+        this.log(msg);
+      }
 
-      // this.log('Getting Laravel...');
-      // var msg = commands.getLaravel() ? 'got Laravel' : 'Got error so you already have it!';
-      // this.log(msg);
+      if(answers.composer_install)
+      {
+        this.log('Getting Composer...');
+        msg = commands.getComposer() ? 'got Composer' :  'Got error while installing Composer';
+        this.log(msg);
+        this.log('Running Composer...');
+        msg = commands.runComposer() ? 'done running composer install' :  'Got error while running composer install!';
+        this.log(msg);
+      }
 
-      // this.log('Getting Composer...');
-      // var msg = commands.getComposer() ? 'got Composer' : 'Got error while installing Composer';
-      // this.log(msg);
-
-      // this.log('Running Composer...');
-      // var msg = commands.runComposer() ? 'done running Composer' : 'Got error while running composer install!';
-      // this.log(msg);
-
-      // this.log('Installing other dependencies (npm / bower)...');
-      // this.npmInstall();
-
-
+      if(answers.npm_install)
+      {
+        this.log('Running npm install...');
+        this.npmInstall();
+      }
 
     },
     end: function () {
