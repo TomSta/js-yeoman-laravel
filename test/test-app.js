@@ -9,7 +9,7 @@ var path = require('path'),
       assert = chai.assert;
 
 describe('yaylar:app', function () {
- var helper, answers;
+ var helper, answers, policies;
 
  describe('first install', function () {
 
@@ -37,17 +37,34 @@ describe('yaylar:app', function () {
    });
 
 
-   it("asks if laravel repo should be cloned", function(){
-     assert.isBoolean(answers.clone_laravel);
-   });
+    it("asks if laravel repo should be cloned", function(){
+          console.log(helper.generator);
+       assert.isBoolean(answers.clone_laravel);
+    });
 
-   it("asks if composer should be run", function(){
-      assert.isBoolean(answers.composer_install);
-   });
+    it("asks if composer should be run", function(){
+        assert.isBoolean(answers.composer_install);
+    });
 
-   it("asks if npm install should be run", function(){
-       assert.isBoolean(answers.npm_install);
-   });
+    it("asks if npm install should be run", function(){
+         assert.isBoolean(answers.npm_install);
+    });
+
+    it("has access to policies", function(){
+      policies = helper.generator.policies;
+      assert.isObject(policies);
+      assert.isFunction(policies.canInstallComposer);
+    });
+
+    it("should download composer if it's the first run", function(){
+      helper.generator.config.set('composer_installed', false);
+      expect(policies.canInstallComposer()).to.equal(true);
+    });
+
+    it("should not download composer if it's run again", function(){
+      helper.generator.config.set('composer_installed', true);
+      expect(policies.canInstallComposer()).to.equal(false);
+    });
 
   });
 

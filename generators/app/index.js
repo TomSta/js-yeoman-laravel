@@ -1,34 +1,43 @@
   'use strict';
 
   var generators = require('yeoman-generator'),
+        appBase = require('./app_base'),
          commands = require('./commands'),
         answers;
 
-  module.exports = generators.Base.extend({
-
-    firstMethod: function(){
-      this.log('Yo generator!');
-    },
-
+  module.exports = appBase.Base.extend({
 
     prompting: function () {
-     var done = this.async();
-     this.prompt([{
-       type    : 'confirm',
-       name    : 'clone_laravel',
-       message : 'clone laravel'
-     },{
-       type    : 'confirm',
-       name    : 'npm_install',
-       message : 'run npm install?'
-     },{
-       type    : 'confirm',
-       name    : 'composer_install',
-       message : 'download and run composer install?'
-     }
+     var done = this.async(),
+          prompts = [];
 
-   ], function (answers_prompt) {
-       answers = answers_prompt;
+     if(this.policies.canInstallComposer()) {
+       prompts.push( {
+         type    : 'confirm',
+         name    : 'composer_install',
+         message : 'Download and run composer install?'
+       } );
+     };
+
+     if(this.policies.canCloneLaravel()) {
+       prompts.push( {
+         type    : 'confirm',
+         name    : 'clone_laravel',
+         message : 'Clone Laravel from Github?'
+       } );
+     };
+
+     if(this.policies.canRunNpmInstall()) {
+       prompts.push( {
+         type    : 'confirm',
+         name    : 'npm_install',
+         message : 'Run NPM install?'
+       } );
+     };
+
+
+     this.prompt(prompts, function (answers_prompt) {
+       this.answers = answers_prompt;
        done();
      }.bind(this));
     },
@@ -37,27 +46,35 @@
 
     },
     installing: function(){
-      var msg;
-      if(answers.clone_laravel)
-      {
+      var success;
+
+
+      if(this.policies.canCloneLaravel()) {
         this.log('Getting Laravel...');
-        msg = commands.getLaravel() ? 'got Laravel' : 'Got error so you already have it!';
-        this.log(msg);
+        success = commands.getLaravel() ? true : false;
+        if(success)
+        {
+          this.config.set('laravel_cloned', true);
+        }
       }
 
-      if(answers.composer_install)
-      {
-        this.log('Getting Composer...');
-        msg = commands.getComposer() ? 'got Composer' :  'Got error while installing Composer';
-        this.log(msg);
-        this.log('Running Composer...');
-        msg = commands.runComposer() ? 'done running composer install' :  'Got error while running composer install!';
-        this.log(msg);
+      if(this.policies.canInstallComposer()) {
+          this.log('Getting Composer...');
+          success = commands.getComposer() ? true : false;
+
+          if(success)
+          {
+            this.config.set('composer_installed', true);
+            this.log('Running Composer...');
+            success = commands.runComposer() ? 'done running composer install' :  'Got error while running composer install!';
+            this.log(success);
+          }
+
       }
 
-      if(answers.npm_install)
-      {
+      if(this.policies.canRunNpmInstall()){
         this.log('Running npm install...');
+                    this.config.set('npm_install_runned', true);
         this.npmInstall();
       }
 
