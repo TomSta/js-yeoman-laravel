@@ -3,20 +3,31 @@
   var generators = require('yeoman-generator'),
          commands = require('./commands'),
         answers;
+
   module.exports = generators.Base.extend({
 
     firstMethod: function(){
       this.log('Yo generator!');
     },
 
+
     prompting: function () {
      var done = this.async();
-     this.prompt({
+     this.prompt([{
        type    : 'confirm',
        name    : 'clone_laravel',
-       message : 'clone laravel',
-       default : this.clone_laravel // Default to current folder name
-     }, function (answers_prompt) {
+       message : 'clone laravel'
+     },{
+       type    : 'confirm',
+       name    : 'npm_install',
+       message : 'run npm install?'
+     },{
+       type    : 'confirm',
+       name    : 'run composer install?',
+       message : 'run npm install?'
+     }
+
+   ], function (answers_prompt) {
        answers = answers_prompt;
        done();
      }.bind(this));
@@ -26,7 +37,7 @@
 
     },
     installing: function(){
-      
+
       // this.log('Getting Laravel...');
       // var msg = commands.getLaravel() ? 'got Laravel' : 'Got error so you already have it!';
       // this.log(msg);

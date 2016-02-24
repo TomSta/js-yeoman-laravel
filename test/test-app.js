@@ -21,7 +21,9 @@ describe('yaylar:app', function () {
        }).withArguments(['NewModel'])
        .withOptions({ fields: 'rambo,tytul' })
        .withPrompts({
-           clone_laravel: true
+           clone_laravel: true,
+           npm_install: true,
+           composer_install: true,
 
        })
        .on('end', function(){
@@ -38,16 +40,15 @@ describe('yaylar:app', function () {
 
 
    it("asks if composer should be run", function(){
-
+      assert.isBoolean(answers.composer_install);
    });
 
    it("asks if npm install should be run", function(){
-
+       assert.isBoolean(answers.npm_install);
    });
 
-
     it("asks if laravel repo should be cloned", function(){
-      assert.isBoolean(answers.clone_laravel, 'is the tea ready');
+      assert.isBoolean(answers.clone_laravel);
     });
 
 
