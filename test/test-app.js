@@ -1,15 +1,15 @@
-var path = require('path');
-var yoassert = require('yeoman-assert');
-var helpers = require('yeoman-test');
-var fs = require('fs-extra');
-var _ = require('lodash');
-var chai = require('chai');
-var expect = chai.expect;
-var should = chai.should();
-     assert = chai.assert;
+var path = require('path'),
+      yoassert = require('yeoman-assert'),
+      helpers = require('yeoman-test'),
+      fs = require('fs-extra'),
+      _ = require('lodash'),
+      chai = require('chai'),
+      expect = chai.expect,
+      should = chai.should(),
+      assert = chai.assert;
 
 describe('yaylar:app', function () {
- var helper, answers, modelName, appDir, viewsDir, file;
+ var helper, answers;
 
  describe('first install', function () {
 

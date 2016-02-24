@@ -1,11 +1,11 @@
-var path = require('path');
-var assert = require('yeoman-assert');
-var helpers = require('yeoman-test');
-var fs = require('fs-extra');
-var _ = require('lodash');
-var chai = require('chai');
-var expect = chai.expect;
-var should = chai.should();
+var path = require('path'),
+      assert = require('yeoman-assert'),
+      helpers = require('yeoman-test'),
+      fs = require('fs-extra'),
+      _ = require('lodash'),
+      chai = require('chai'),
+      expect = chai.expect,
+      should = chai.should();
 
 describe('yaylar:model', function () {
  var helper, answers, modelName, appDir, viewsDir, file;
